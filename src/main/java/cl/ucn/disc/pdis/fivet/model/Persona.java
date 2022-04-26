@@ -33,6 +33,8 @@ import lombok.NoArgsConstructor;
 
 /**
  * The Persona.
+ *
+ * @author José Ávalos Guzmán
  */
 @NoArgsConstructor
 @AllArgsConstructor
