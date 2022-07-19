@@ -1,0 +1,85 @@
+## Modelo del dominio
+´´´puml
+@startuml
+package cl.ucn.disc.pdis.fivet.model {
+class Control {
+        -fecha: ZonedDateTime
+        -temperatura: Double
+        -peso: Double
+        -altura: Double
+        -diagnostico: Double
+        -fichaMedica: FichaMedica
+        +Control()
+        +Control(...)
+        +getFecha(): ZonedDateTime
+        +getTemperatura(): Double
+        +getPeso(): Double
+        +getAltura(): Double
+        +getDiagnostico(): Double
+        +getVeterinario(): Persona
+        +getFichaMedica(): FichaMedica
+    }
+class FichaMedica {
+    -numero: Integer
+    -nombrePaciente: String
+    -especie: String
+    -fechaNacimiento: LocalDate
+    -raza: String
+    -color: String
+    -tipo: String
+    +FichaMedica()
+    +FichaMedica(...)
+    +getNumero(): Integer
+    +getNombrePaciente(): String
+    +getEspecie(): String
+    +getFechaNacimiento(): LocalDate
+    +getRaza(): String
+    +getColor(): String
+    +getTipo(): String
+    +getSexo(): Sexo
+    +getDuenio(): Persona
+    +getControles():List<Control>
+
+}
+
+FichaMedica --> "N" Control : -controles
+FichaMedica --> "1" Sexo : -sexo
+
+enum Sexo {
+    MACHO
+    HEMBRA
+}
+class Persona {
+    -rut: String
+    -nombre: String
+    -email: String
+    -password: String
+    -direccion: String
+    +Persona()
+    +Persona(...)
+    +getRut(): String
+    +getNombre(): String
+    +getEmail(): String
+    +getPassword(): String
+    +getDireccion(): String
+    }
+Persona "1" <-- FichaMedica : -duenio
+Persona "1" <-- Control: -veterinario
+
+class BaseEntity <<abstract>> {
+    -id: Integer
+    -createdAt: ZonedDateTime
+    -deletedAt: ZonedDateTime
+    +getId(): Integer
+    +getCreatedAt(): ZonedDateTime
+    +getDeletedAt(): ZonedDateTime
+    +setDeletedAt(deletedAt: ZonedDateTime): void
+}
+BaseEntity <|-- Persona
+BaseEntity <|-- Control
+BaseEntity <|-- FichaMedica
+}
+
+
+@enduml
+´´´
