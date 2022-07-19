@@ -10,8 +10,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -25,21 +25,25 @@
 package cl.ucn.disc.pdis.fivet.orm;
 
 import com.j256.ormlite.field.DatabaseField;
-import lombok.Getter;
+import com.j256.ormlite.table.DatabaseTable;
+import lombok.*;
 
 import java.time.ZonedDateTime;
 
 /**
- * The Base Entity
- * @author José Ávalos Guzmán
+ * The Base Entity.
+ * @author José Ávalos Guzmán.
  */
+@AllArgsConstructor
+@NoArgsConstructor
+@DatabaseTable
 public abstract class BaseEntity {
 
     /**
      *  The Id.
      */
     @Getter  //lombok automáticamente agrega el get
-    @DatabaseField(generatedId = true) // señor orm todas las clases que den de esta tendran una id, y esa id tu lo generas (el orm)
+    @DatabaseField(generatedId = true) // profe: señor orm todas las clases que den de esta tendran una id, y esa id tu lo generas (el orm)
     protected Integer id;
 
     /**
@@ -53,6 +57,6 @@ public abstract class BaseEntity {
      * The date of deletion.
      */
     @Getter
-    @DatabaseField
+    @DatabaseField(canBeNull = true)
     protected ZonedDateTime deletedAt;
 }
