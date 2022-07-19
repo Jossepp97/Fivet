@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 José Ávalos Guzmán
+ * Copyright (c) 2022 José Ávalos Guzmán  <jose.avalos01@alumnos.ucn.cl>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,54 +27,71 @@ package cl.ucn.disc.pdis.fivet.model;
 import cl.ucn.disc.pdis.fivet.orm.BaseEntity;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.ZonedDateTime;
 
 /**
- * The Persona.
+ * The Control.
  *
  * @author José Ávalos Guzmán.
  */
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@DatabaseTable
-public final class Persona extends BaseEntity {
+@DatabaseTable(tableName = "control")
+public class Control extends BaseEntity {
 
     /**
-     * The Nombre.
+     * The date of the control.
      */
     @Getter
     @DatabaseField(canBeNull = false)
-    private String nombre;
+    private ZonedDateTime fecha;
 
     /**
-     * The direccion of the person.
+     * The diagnostico of the Patient
      */
     @Getter
     @DatabaseField(canBeNull = false)
-    private String direccion;
+    private String diagnostico;
 
     /**
-     *  Password of the persona.
+     * The temperature registered in the control.
      */
     @Getter
-    @Setter
     @DatabaseField(canBeNull = false)
-    private String password;
+    private Double temperatura;
 
     /**
-     * The Email.
+     * The peso of the patient in the control.
      */
     @Getter
-    @DatabaseField(canBeNull = false, unique = true)
-    private String email;
-
+    @DatabaseField(canBeNull = false)
+    private Double peso;
 
     /**
-     * The Rut.
+     * The altura of the patient in the control.
      */
     @Getter
-    @DatabaseField(canBeNull = false, unique = true)
-    private String rut;
+    @DatabaseField(canBeNull = false)
+    private Double altura;
 
+    /**
+     * The Veterinario.
+     */
+    @Getter
+    @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "veterinario", canBeNull = false)
+    private Persona veterinario;
+
+    /**
+     * The Ficha Medica.
+     */
+    @Getter
+    @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "fichamedica_id")
+    private FichaMedica fichaMedica;
 }
+

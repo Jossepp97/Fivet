@@ -10,8 +10,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -26,18 +26,21 @@ package cl.ucn.disc.pdis.fivet.model;
 
 import cl.ucn.disc.pdis.fivet.orm.BaseEntity;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
+import java.util.Collection;
 
 /**
- * The model of the FichaMedica object
+ * The model of the FichaMedica.
  *
- * @author José Ávalos Guzmán
+ * @author José Ávalos Guzmán.
  */
 @NoArgsConstructor
 @AllArgsConstructor
@@ -46,59 +49,88 @@ import java.time.ZonedDateTime;
 public final class FichaMedica extends BaseEntity {
 
     /**
-     * The number of the record card
+     * The number of the record card.
      */
     @Getter
     @DatabaseField(canBeNull = false, unique = true)
     private Integer numeroFicha;
 
     /**
-     * The patient's name
+     * The patient's name.
      */
     @Getter
     @DatabaseField(canBeNull = false)
     private String nombrePaciente;
 
     /**
-     * The especie of the patient
+     * The especie of the patient.
      */
     @Getter
     @DatabaseField(canBeNull = false)
     private String especie;
 
     /**
-     * The date of birth of the patient
+     * The date of birth of the patient.
      */
     @Getter
     @DatabaseField(canBeNull = false)
     private ZonedDateTime fechaNacimiento;
 
     /**
-     * The raza of the patient
+     * The raza of the patient.
      */
     @Getter
     @DatabaseField(canBeNull = false)
     private String raza;
 
     /**
-     * The sexo of the patient
+     * The sexo of the patient.
      */
     @Getter
     @DatabaseField(canBeNull = false)
-    private Character sexo;
+    private Sexo sexo;
 
     /**
-     * The color of the patient
+     * The color of the patient.
      */
     @Getter
     @DatabaseField(canBeNull = false)
     private String color;
 
     /**
-     * The tipo of animal
+     * The tipo of animal.
      */
     @Getter
     @DatabaseField(canBeNull = false)
     private String tipo;
 
+    /**
+     * The Duenio of the Patient
+     */
+    @Getter
+    @Setter
+    @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "persona_id")
+    private Persona duenio;
+
+    /**
+     * The list of controles of the Patient
+     */
+    @Getter
+    @ForeignCollectionField(eager = true, orderColumnName = "fecha")
+    private Collection<Control> controles;
+
+    /**
+     * Append a Control
+     */
+    public void add(Control control) {
+        this.controles.add(control);
+    }
+
+    /**
+     * The Sexo
+     */
+    public enum Sexo {
+        MACHO,
+        HEMBRA
+    }
 }
