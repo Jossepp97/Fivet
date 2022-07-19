@@ -10,8 +10,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -24,47 +24,66 @@
 
 package cl.ucn.disc.pdis.fivet.orm;
 
+import lombok.SneakyThrows;
+
 import java.util.List;
 import java.util.Optional;
 
 /**
- * Data Access Object: DAO
- * @author Jose Avalos Guzman
+ * Data Access Object: DAO.
+ * @param <T> to use.
+ * @author Jose Avalos Guzman.
  */
-public interface DAO<T extends BaseEntity>{
+public interface DAO<T extends BaseEntity> {
 
     /**
-     *  Get optional T
-     *  @param id to search
+     *  Get optional T.
+     *
+     *  @param id to search.
      */
     Optional<T> get(Integer id);
 
     /**
-     * Get all the Ts
+     * Get optional T.
      *
-     * @return the List of T
+     * @param attrib to use.
+     * @param value to search.
+     * @return a T.
+     */
+    @SneakyThrows
+    Optional<T> get(String attrib, Object value);
+
+    /**
+     * Get all the Ts.
+     *
+     * @return the List of T.
      */
     List<T> getAll();
 
     /**
      * Save a T.
      *
-     * @param t to save
+     * @param t to save.
      */
-    void save (T t);
+    void save(T t);
 
     /**
-     * Delete a T
+     * Delete a T.
      *
-     * @param t to delete
+     * @param t to delete.
      */
-    void delete (T t);
+    void delete(T t);
 
     /**
-     * Delete a T with id
+     * Delete a T with id.
      *
      * @param id of th et to delete.
      */
     void delete(Integer id);
+
+    /**
+     * Drop and Create Table
+     */
+    void dropAndCreateTable();
 
 }

@@ -22,19 +22,20 @@
  * SOFTWARE.
  */
 
-package cl.ucn.disc.pdis.fivet;
+package cl.ucn.disc.pdis.fivet.orm;
 
-import cl.ucn.disc.pdis.fivet.orm.BaseEntity;
-import cl.ucn.disc.pdis.fivet.orm.DAO;
-import cl.ucn.disc.pdis.fivet.orm.ORMLiteDAO;
-import cl.ucn.disc.pdis.fivet.orm.ZonedDateTimeType;
 import com.j256.ormlite.field.DataPersisterManager;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTable;
 import com.j256.ormlite.table.TableUtils;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Cleanup;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -42,8 +43,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-
 import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /**
@@ -52,7 +54,7 @@ import java.util.Optional;
  * @author José Ávalos Guzmán
  */
 @Slf4j
-public final class TestDAO {
+public class TestDAO {
 
     /**
      * The Main DAO
@@ -99,6 +101,14 @@ public final class TestDAO {
                     .theBoolean(Boolean.TRUE)
                     .build();
             dao.save(theEntityA);
+
+            TheEntity theEntityB = TheEntity.builder()
+                    .theString("The String b")
+                    .theInteger(127)
+                    .theDouble(127.0)
+                    .theBoolean(Boolean.FALSE)
+                    .build();
+            dao.save(theEntityB);
             log.debug("To db: {}", ToStringBuilder.reflectionToString(theEntityA, ToStringStyle.MULTI_LINE_STYLE));
         }
 
@@ -106,14 +116,36 @@ public final class TestDAO {
         log.debug("Retrieving ..");
         {
             TheEntity theEntity = dao.get(1).orElseThrow();
+            Assertions.assertThrowsExactly(NoSuchElementException.class, () ->{
+                dao.get(10).orElseThrow();
+            });
             log.debug("from db: {}", ToStringBuilder.reflectionToString(theEntity, ToStringStyle.MULTI_LINE_STYLE));
         }
+
+        //  Getting ..
+        log.debug("Getting ..");
+        {
+            TheEntity theEntity = dao.get("theInteger", "128").orElseThrow();
+            Assertions.assertThrowsExactly(NoSuchElementException.class, () ->{
+                dao.get("theInteger", "1").orElseThrow();
+            });
+
+            List<TheEntity> listEntity = dao.getAll();
+        }
+
+        // Retrieve ..
+        {
+            Optional<TheEntity> theEntity = dao.get("theInteger", "128");
+        }
+
 
         // Fake delete ..
         log.debug("Deleting ..");
         {
             TheEntity theEntity = dao.get(1).orElseThrow();
             dao.delete(theEntity);
+            dao.delete(2);
+            dao.delete(2);
         }
 
         //retrieve ..
@@ -123,7 +155,8 @@ public final class TestDAO {
             //Assertions.assertTrue(dao.get(0).isEmpty(), "DAO 1 was not null");
             Optional<TheEntity> theEntity2 = dao.get(10);
             Assertions.assertTrue(theEntity2.isEmpty(), "DAO 10 was not null");
-            TheEntity theEntity = dao.get(1).orElseThrow();
+            Optional<TheEntity> theEntity = dao.get(1);
+            Assertions.assertTrue(theEntity2.isEmpty(), "DAO 10 was not null");
             log.debug("To db: {}", ToStringBuilder.reflectionToString(theEntity, ToStringStyle.MULTI_LINE_STYLE));
         }
 
