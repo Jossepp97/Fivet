@@ -1,9 +1,21 @@
+buildscript {
+    repositories{
+        mavenCentral()
+    }
+    dependencies {
+        classpath'com.google.protobuf:protobuf-gradle-plugin:0.8.18'
+    }
+}
+
+
 plugins {
     id 'java'
+    id 'com.google.protobuf' version '0.8.18'
+    id 'idea'
 }
 
 group 'cl.ucn.disc.pdis'
-version '0.0.1'
+version '0.1.2'
 sourceCompatibility = '17'
 
 configurations {
@@ -23,15 +35,12 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 
     // Lombok
-    testCompileOnly 'org.projectlombok:lombok:1.18.22'
+    testCompileOnly 'org.projectlombok:lombok:1.18.24'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
-
-    // JPA
-    implementation 'javax.persistence:javax.persistence-api:2.2'
 
     // ORMLite
     implementation 'com.j256.ormlite:ormlite-core:6.1'
@@ -49,6 +58,47 @@ dependencies {
 
     // Commons Lang
     implementation 'org.apache.commons:commons-lang3:3.12.0'
+
+    // gRPC
+    runtimeOnly 'io.grpc:grpc-netty-shaded:1.45.1'
+    implementation 'io.grpc:grpc-protobuf:1.45.1'
+    implementation 'io.grpc:grpc-stub:1.45.1'
+    compileOnly 'org.apache.tomcat:annotations-api:6.0.53'
+
+    // Bcrypt implementation
+    implementation 'org.springframework.security:spring-security-crypto:5.6.3'
+    runtimeOnly 'org.bouncycastle:bcprov-jdk15on:1.70'
+    runtimeOnly 'org.springframework:spring-jcl:5.3.19'
+}
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.20.0'
+    }
+
+    generatedFilesBaseDir = "$projectDir/src/generated"
+    clean {
+        delete generatedFilesBaseDir
+    }
+    plugins {
+        grpc {
+            artifact = 'io.grpc:protoc-gen-grpc-java:1.45.1'
+        }
+    }
+    generateProtoTasks{
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'build/generated/source/proto/main/grpc'
+            srcDirs 'build/generated/source/proto/main/java'
+        }
+    }
 }
 
 test {
